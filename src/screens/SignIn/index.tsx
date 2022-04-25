@@ -27,9 +27,10 @@ export function SignIn() {
     
   async function handleSignIn(){
     try {
-      return await SignIn();
+      await signIn();
     } catch (error:any) {
       Alert.alert('Ocorreu um erro ao tentar logar no app');
+      console.log(error.message)
     } 
   }
 

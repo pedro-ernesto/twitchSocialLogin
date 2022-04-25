@@ -49,20 +49,12 @@ function AuthProvider({ children }: AuthProviderData) {
       // set isLoggingIn to true
       setIsLoggingIn(true);
 
-      // REDIRECT_URI - create OAuth redirect URI using makeRedirectUri() with "useProxy" option set to true
-      // RESPONSE_TYPE - set to "token"
-      // SCOPE - create a space-separated list of the following scopes: "openid", "user:read:email" and "user:read:follows"
-      // FORCE_VERIFY - set to true
-      // STATE - generate random 30-length string using generateRandom() with "size" set to 30
       const REDIRECT_URI = makeRedirectUri({useProxy:true});
       const RESPONSE_TYPE = 'token';
-      const SCOPE = 'openid user:read:email user:read:follows';
+      const SCOPE = encodeURI('openid user:read:email user:read:follows');
       const FORCE_VERIFY = true;
       const STATE = generateRandom(30);
-      
 
-      // assemble authUrl with twitchEndpoint authorization, client_id, 
-      // redirect_uri, response_type, scope, force_verify and state
       const authUrl = twitchEndpoints.authorization + 
       `?client_id=${CLIENT_ID}` + 
       `&redirect_uri=${REDIRECT_URI}` + 
@@ -70,9 +62,10 @@ function AuthProvider({ children }: AuthProviderData) {
       `&scope=${SCOPE}` + 
       `&force_verify=${FORCE_VERIFY}` +
       `&state=${STATE}`;
-
+      console.log(authUrl);
       // call startAsync with authUrl
       const authResponse = await startAsync({authUrl});
+      console.log(authResponse);
       if (authResponse.type === 'success' && authResponse.params.error !== 'access_denied'){
         if (authResponse.params.state !== STATE)
           throw new Error('Invalid state value');
